@@ -19,7 +19,6 @@ body {
     background: url("https://images.unsplash.com/photo-1506744038136-46273834b3fb") no-repeat center/cover;
 }
 
-/* Glass Container */
 .container {
     width: 360px;
     padding: 30px;
@@ -30,14 +29,12 @@ body {
     color: white;
 }
 
-/* Title */
 h2 {
     text-align: center;
     color: #ff7a3d;
     margin-bottom: 20px;
 }
 
-/* Input Groups */
 .group {
     margin-bottom: 18px;
 }
@@ -63,7 +60,6 @@ input:focus {
     background: rgba(255,255,255,0.15);
 }
 
-/* Result Box */
 .result {
     margin-top: 20px;
     padding: 15px;
@@ -104,15 +100,24 @@ input:focus {
 const EXPLOSIVES_PER_ROCKET = 10;
 const SULFUR_PER_EXPLOSIVE = 220;
 const SULFUR_PER_ROCKET = EXPLOSIVES_PER_ROCKET * SULFUR_PER_EXPLOSIVE;
+const CHARCOAL_PER_SULFUR = 2;
 
 const rocketsInput = document.getElementById("rockets");
 const explosivesInput = document.getElementById("explosives");
 const sulfurInput = document.getElementById("sulfur");
 const output = document.getElementById("output");
 
+function resetAll() {
+    rocketsInput.value = "";
+    explosivesInput.value = "";
+    sulfurInput.value = "";
+    output.innerHTML = "Gib einen Wert ein 👆";
+}
+
 function updateFromRockets() {
     let rockets = rocketsInput.value;
-    if (!rockets) return;
+
+    if (rockets === "") return resetAll();
 
     let explosives = rockets * EXPLOSIVES_PER_ROCKET;
     let sulfur = rockets * SULFUR_PER_ROCKET;
@@ -128,7 +133,8 @@ function updateFromRockets() {
 
 function updateFromExplosives() {
     let explosives = explosivesInput.value;
-    if (!explosives) return;
+
+    if (explosives === "") return resetAll();
 
     let rockets = Math.floor(explosives / EXPLOSIVES_PER_ROCKET);
     let sulfur = explosives * SULFUR_PER_EXPLOSIVE;
@@ -144,21 +150,23 @@ function updateFromExplosives() {
 
 function updateFromSulfur() {
     let sulfur = sulfurInput.value;
-    if (!sulfur) return;
+
+    if (sulfur === "") return resetAll();
 
     let rockets = Math.floor(sulfur / SULFUR_PER_ROCKET);
     let explosives = Math.floor(sulfur / SULFUR_PER_EXPLOSIVE);
+    let charcoal = sulfur * CHARCOAL_PER_SULFUR;
 
     rocketsInput.value = rockets;
     explosivesInput.value = explosives;
 
     output.innerHTML = `
         🚀 Rockets: ${rockets}<br>
-        🧨 Explosives: ${explosives}
+        🧨 Explosives: ${explosives}<br>
+        🪵 Charcoal: ${charcoal}
     `;
 }
 
-/* Live Events */
 rocketsInput.addEventListener("input", updateFromRockets);
 explosivesInput.addEventListener("input", updateFromExplosives);
 sulfurInput.addEventListener("input", updateFromSulfur);
